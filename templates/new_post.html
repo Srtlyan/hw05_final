@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %} Пост{% endblock %}
+{% block header %}
+  {% if post %}
+    Редактировать запись
+  {% else %}
+    Добавить запись
+  {% endif %}
+{% endblock %}
+{% block content %}
+<div class='row justify-content-center'>
+  <form method='post' enctype='multipart/form-data' action='{% if post %}{% url 'post_edit' user.username post.pk %}{% else %}{% url 'new_post' %}{% endif %}'>
+    {% csrf_token %}
+    {{ form.as_p }}
+    {% if post %}
+    <input type='submit' value=Редактировать>
+    {% else %}
+    <input type='submit' value=Добавить>
+    {% endif %}
+
+  </form>
+</div> 
+
+{% endblock %}
