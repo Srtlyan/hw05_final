@@ -88,8 +88,7 @@ class Comment(models.Model):
         related_name="comments",
         verbose_name="Автор комментария",
         )
-    text = models.CharField(
-        max_length=1000,
+    text = models.TextField(
         verbose_name="Текст комментария",
         )
     created = models.DateTimeField(

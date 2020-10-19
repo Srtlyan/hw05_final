@@ -50,7 +50,7 @@ def new_post(request):
         post = form.save(commit=False)
         post.author = request.user
         post.save()
-        return profile(request, index)
+        return redirect('index')
     return render(request, 'new_post.html', {'form': form})
 
 
@@ -80,12 +80,8 @@ def add_comment(request, username, post_id):
         form.instance.author = request.user
         form.instance.post = post
         form.save()
-        return post_view(request, username, post_id)
-    return render(
-        request,
-        'includes/comments.html',
-        {'post': post, 'form': form},
-        )
+        return redirect('post', username, post_id)
+    return redirect('post', username, post_id)
 
 
 def profile(request, username):
@@ -124,7 +120,7 @@ def post_edit(request, username, post_id):
     """
     user = get_object_or_404(User, username=username)
     if request.user != user:
-        return post_view(request, username, post_id)
+        return redirect('post', username, post_id)
     post = get_object_or_404(
         Post,
         pk=post_id,
@@ -137,7 +133,7 @@ def post_edit(request, username, post_id):
         )
     if form.is_valid():
         post = form.save()
-        return post_view(request, username, post_id)
+        return redirect('post', username, post_id)
     return render(request, 'new_post.html', {'form': form, 'post': post})
 
 
