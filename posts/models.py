@@ -119,3 +119,6 @@ class Follow(models.Model):
     class Meta:
         """Stores unique pairs user-author"""
         unique_together = ('user', 'author')
+
+    def __str__(self):
+        return f'user:{self.user} author:{self.author}'

@@ -1,6 +1,5 @@
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-from django.db import IntegrityError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import cache_page
 from users.forms import User
@@ -100,8 +99,8 @@ def profile(request, username):
     following = None
     if not request.user.is_anonymous or request.user.is_authenticated:
         following = Follow.objects.filter(
-            user = request.user,
-            author = author)
+            user=request.user,
+            author=author)
     return render(
         request, 'profile.html',
         {
@@ -175,12 +174,10 @@ def follow_index(request):
 def profile_follow(request, username):
     follower = request.user
     following = get_object_or_404(User, username=username)
-    if follower != following:
-        try:
-            Follow.objects.create(user=follower, author=following)
-        except IntegrityError:
-            profile(request, username)
-    return profile(request, username)
+    if following == follower:
+        return redirect('profile', username)
+    Follow.objects.get_or_create(user=follower, author=following)
+    return redirect('profile', username)
 
 
 @login_required
